@@ -47,3 +47,14 @@ app.post("/restaurantes", async (req, res) => {
 app.listen(PORT, () => {
   console.log(`Servidor escuchando en puerto ${PORT}`);
 });
+
+// Obtener todos los restaurantes (para login)
+app.get("/restaurantes", async (req, res) => {
+  try {
+    const restaurantes = await Restaurante.find();
+    res.json(restaurantes);
+  } catch (err) {
+    res.status(500).send("Error al obtener los restaurantes");
+  }
+});
+
