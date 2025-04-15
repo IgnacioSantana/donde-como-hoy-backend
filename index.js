@@ -31,18 +31,28 @@ app.get("/", (req, res) => {
 
 app.post("/restaurantes", async (req, res) => {
   const { nombre, email, password } = req.body;
+
   if (!nombre || !email || !password) {
-    return res.status(400).send("Faltan campos obligatorios");
+    return res.status(400).json({ message: "Faltan campos obligatorios" });
   }
 
   try {
+    // Verificar si el correo ya existe
+    const restauranteExistente = await Restaurante.findOne({ email });
+
+    if (restauranteExistente) {
+      return res.status(400).json({ message: "Este correo ya está registrado" });
+    }
+
     const nuevoRestaurante = new Restaurante({ nombre, email, password });
     await nuevoRestaurante.save();
     res.status(201).json(nuevoRestaurante);
   } catch (err) {
-    res.status(500).send("Error al registrar restaurante");
+    console.error("Error al registrar restaurante:", err);
+    res.status(500).json({ message: "Error al registrar restaurante" });
   }
 });
+
 
 app.listen(PORT, () => {
   console.log(`Servidor escuchando en puerto ${PORT}`);
