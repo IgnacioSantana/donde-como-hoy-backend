@@ -45,4 +45,16 @@ app.post("/restaurantes", async (req, res) => {
     const restauranteExistente = await Restaurante.findOne({ email });
 
     if (restauranteExistente) {
-      return res.status(400).json({ message: "El
+      return res.status(400).json({ message: "El correo ya está registrado" });
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    const nuevoRestaurante = new Restaurante({
+      nombre,
+      email,
+      password: hashedPassword,
+    });
+
+    await nuevoRestaurante
