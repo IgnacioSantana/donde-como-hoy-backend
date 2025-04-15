@@ -11,13 +11,15 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
+// Conexión a MongoDB
 mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
-.then(() => console.log("MongoDB conectado"))
-.catch((err) => console.error("Error de conexión a MongoDB:", err));
+.then(() => console.log("✅ MongoDB conectado"))
+.catch((err) => console.error("❌ Error de conexión a MongoDB:", err));
 
+// Modelo de Restaurante
 const RestauranteSchema = new mongoose.Schema({
   nombre: String,
   email: String,
@@ -25,10 +27,12 @@ const RestauranteSchema = new mongoose.Schema({
 });
 const Restaurante = mongoose.model("Restaurante", RestauranteSchema);
 
+// Ruta principal
 app.get("/", (req, res) => {
-  res.send("API de Menú del Día operativa con MongoDB.");
+  res.send("API de Dónde Como Hoy operativa con MongoDB.");
 });
 
+// 🟢 Registro de restaurante
 app.post("/restaurantes", async (req, res) => {
   const { nombre, email, password } = req.body;
 
@@ -37,34 +41,7 @@ app.post("/restaurantes", async (req, res) => {
   }
 
   try {
-    // Verificar si el correo ya existe
     const restauranteExistente = await Restaurante.findOne({ email });
 
     if (restauranteExistente) {
-      return res.status(400).json({ message: "Este correo ya está registrado" });
-    }
-
-    const nuevoRestaurante = new Restaurante({ nombre, email, password });
-    await nuevoRestaurante.save();
-    res.status(201).json(nuevoRestaurante);
-  } catch (err) {
-    console.error("Error al registrar restaurante:", err);
-    res.status(500).json({ message: "Error al registrar restaurante" });
-  }
-});
-
-
-app.listen(PORT, () => {
-  console.log(`Servidor escuchando en puerto ${PORT}`);
-});
-
-// Obtener todos los restaurantes (para login)
-app.get("/restaurantes", async (req, res) => {
-  try {
-    const restaurantes = await Restaurante.find();
-    res.json(restaurantes);
-  } catch (err) {
-    res.status(500).send("Error al obtener los restaurantes");
-  }
-});
-
+      return res.status(
