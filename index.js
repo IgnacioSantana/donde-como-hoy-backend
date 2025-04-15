@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
+import bcrypt from "bcrypt"; // ✅ Cifrado seguro
 
 dotenv.config();
 
@@ -11,7 +12,7 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
-// Conexión a MongoDB
+// 🔌 Conexión a MongoDB
 mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -19,7 +20,7 @@ mongoose.connect(process.env.MONGODB_URI, {
 .then(() => console.log("✅ MongoDB conectado"))
 .catch((err) => console.error("❌ Error de conexión a MongoDB:", err));
 
-// Modelo de Restaurante
+// 🧠 Esquema de restaurante
 const RestauranteSchema = new mongoose.Schema({
   nombre: String,
   email: String,
@@ -27,7 +28,7 @@ const RestauranteSchema = new mongoose.Schema({
 });
 const Restaurante = mongoose.model("Restaurante", RestauranteSchema);
 
-// Ruta principal
+// 🌐 Ruta principal
 app.get("/", (req, res) => {
   res.send("API de Dónde Como Hoy operativa con MongoDB.");
 });
@@ -44,4 +45,4 @@ app.post("/restaurantes", async (req, res) => {
     const restauranteExistente = await Restaurante.findOne({ email });
 
     if (restauranteExistente) {
-      return res.status(
+      return res.status(400).json({ message: "El
