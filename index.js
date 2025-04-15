@@ -70,4 +70,44 @@ app.post("/restaurantes/login", async (req, res) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
-    return res
+    return res.status(400).json({ message: "Faltan el correo o la contraseña." });
+  }
+
+  try {
+    const restaurante = await Restaurante.findOne({ email });
+
+    if (!restaurante) {
+      return res.status(401).json({ message: "Correo no registrado." });
+    }
+
+    const passwordValida = await bcrypt.compare(password, restaurante.password);
+
+    if (!passwordValida) {
+      return res.status(401).json({ message: "Contraseña incorrecta." });
+    }
+
+    res.status(200).json({
+      message: "Inicio de sesión exitoso",
+      restauranteId: restaurante._id,
+      nombre: restaurante.nombre,
+    });
+  } catch (err) {
+    console.error("Error en login:", err);
+    res.status(500).json({ message: "Error del servidor durante el login" });
+  }
+});
+
+// Obtener todos los restaurantes (opcional)
+app.get("/restaurantes", async (req, res) => {
+  try {
+    const restaurantes = await Restaurante.find();
+    res.json(restaurantes);
+  } catch (err) {
+    res.status(500).send("Error al obtener los restaurantes");
+  }
+});
+
+// ⬇️ ESTA PARTE NO DEBE FALTAR
+app.listen(PORT, () => {
+  console.log(`🚀 Servidor escuchando en puerto ${PORT}`);
+});
