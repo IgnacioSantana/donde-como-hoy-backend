@@ -46,7 +46,7 @@ app.post("/restaurantes", async (req, res) => {
   }
 
   try {
-    const restauranteExistente = await Restaurante.findOne({ email });
+    const restauranteExistente = await Restaurante.findOne({ email: emailNormalizado });
 
     if (restauranteExistente) {
       return res.status(400).json({ message: "El correo ya está registrado" });
