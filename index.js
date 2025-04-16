@@ -138,8 +138,6 @@ app.get("/menus/:restauranteId/:fecha", async (req, res) => {
   }
 });
 
-app.use(express.json()); // importante para que funcione el body en los POST
-
 // ⬇️ ESTA PARTE NO DEBE FALTAR
 app.listen(PORT, () => {
   console.log(`🚀 Servidor escuchando en puerto ${PORT}`);
