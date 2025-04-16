@@ -38,6 +38,8 @@ app.get("/", (req, res) => {
 // Registro
 app.post("/restaurantes", async (req, res) => {
   const { nombre, email, password } = req.body;
+  const emailNormalizado = email.toLowerCase();
+
 
   if (!nombre || !email || !password) {
     return res.status(400).json({ message: "Faltan campos obligatorios" });
