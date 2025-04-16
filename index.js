@@ -3,6 +3,8 @@ import cors from "cors";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import bcrypt from "bcrypt";
+import Menu from "./models/Menu.js"
+
 
 dotenv.config();
 
@@ -106,6 +108,37 @@ app.get("/restaurantes", async (req, res) => {
     res.status(500).send("Error al obtener los restaurantes");
   }
 });
+// Ruta para guardar menú
+app.post("/menus", async (req, res) => {
+  const { restauranteId, fecha, precio, primeros, segundos, incluye } = req.body;
+
+  if (!restauranteId || !fecha || !precio) {
+    return res.status(400).json({ message: "Faltan campos obligatorios" });
+  }
+
+  try {
+    const nuevoMenu = new Menu({ restauranteId, fecha, precio, primeros, segundos, incluye });
+    await nuevoMenu.save();
+    res.status(201).json(nuevoMenu);
+  } catch (error) {
+    res.status(500).json({ message: "Error al guardar el menú" });
+  }
+});
+
+// Ruta para obtener menú de un restaurante en una fecha
+app.get("/menus/:restauranteId/:fecha", async (req, res) => {
+  const { restauranteId, fecha } = req.params;
+
+  try {
+    const menu = await Menu.findOne({ restauranteId, fecha });
+    if (!menu) return res.status(404).json({ message: "No hay menú para esta fecha" });
+    res.json(menu);
+  } catch (error) {
+    res.status(500).json({ message: "Error al obtener el menú" });
+  }
+});
+
+app.use(express.json()); // importante para que funcione el body en los POST
 
 // ⬇️ ESTA PARTE NO DEBE FALTAR
 app.listen(PORT, () => {
