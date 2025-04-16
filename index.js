@@ -72,13 +72,14 @@ app.post("/restaurantes", async (req, res) => {
 // Login
 app.post("/restaurantes/login", async (req, res) => {
   const { email, password } = req.body;
+  const emailNormalizado = email.toLowerCase();
 
   if (!email || !password) {
     return res.status(400).json({ message: "Faltan el correo o la contraseña." });
   }
 
   try {
-    const restaurante = await Restaurante.findOne({ email });
+    const restaurante = await Restaurante.findOne({ email: emailNormalizado });
 
     if (!restaurante) {
       return res.status(401).json({ message: "Correo no registrado." });
