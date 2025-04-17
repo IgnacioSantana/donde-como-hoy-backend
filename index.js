@@ -22,7 +22,7 @@ mongoose.connect(process.env.MONGODB_URI, {
 .then(() => console.log("✅ MongoDB conectado"))
 .catch((err) => console.error("❌ Error de conexión a MongoDB:", err));
 
-import Restaurante from "./models/Restaurante.js";
+import Restaurante from "./models/Restaurantes.js";
 
 // Ruta principal
 app.get("/", (req, res) => {
