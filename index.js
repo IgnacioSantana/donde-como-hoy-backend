@@ -105,6 +105,35 @@ app.get("/restaurantes", async (req, res) => {
     res.status(500).send("Error al obtener los restaurantes");
   }
 });
+// 🖼 Ruta para actualizar la imagen de un restaurante
+app.put("/restaurantes/:id/imagen", async (req, res) => {
+  const { id } = req.params;
+  const { imagen } = req.body;
+
+  if (!imagen) {
+    return res.status(400).json({ message: "No se ha enviado ninguna imagen" });
+  }
+
+  try {
+    const restauranteActualizado = await Restaurante.findByIdAndUpdate(
+      id,
+      { imagen },
+      { new: true }
+    );
+
+    if (!restauranteActualizado) {
+      return res.status(404).json({ message: "Restaurante no encontrado" });
+    }
+
+    res.status(200).json({
+      message: "Imagen actualizada correctamente",
+      restaurante: restauranteActualizado,
+    });
+  } catch (error) {
+    console.error("❌ Error al actualizar la imagen:", error);
+    res.status(500).json({ message: "Error al actualizar la imagen" });
+  }
+});
 // Ruta para guardar menú
 app.post("/menus", async (req, res) => {
   const { restauranteId, fecha, precio, primeros, segundos, incluye } = req.body;
