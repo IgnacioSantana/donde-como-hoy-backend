@@ -22,13 +22,7 @@ mongoose.connect(process.env.MONGODB_URI, {
 .then(() => console.log("✅ MongoDB conectado"))
 .catch((err) => console.error("❌ Error de conexión a MongoDB:", err));
 
-// Esquema del modelo
-const RestauranteSchema = new mongoose.Schema({
-  nombre: String,
-  email: String,
-  password: String,
-});
-const Restaurante = mongoose.model("Restaurante", RestauranteSchema);
+import Restaurante from "./models/Restaurante.js";
 
 // Ruta principal
 app.get("/", (req, res) => {
