@@ -3,8 +3,8 @@ import cors from "cors";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import bcrypt from "bcrypt";
-import Menu from "./models/Menu.js"
-
+import Menu from "./models/Menu.js";
+import dotenv from 'dotenv';
 
 dotenv.config();
 
