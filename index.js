@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import bcrypt from "bcrypt";
 import Menu from "./models/Menu.js";
 import dotenv from 'dotenv';
+import { uploadImage } from "./controllers/restaurantesController.js";
 
 dotenv.config();
 
@@ -125,34 +126,9 @@ app.get("/restaurantes/:id", async (req, res) => {
 });
 
 // 🖼 Ruta para actualizar la imagen de un restaurante
-app.put("/restaurantes/:id/imagen", async (req, res) => {
-  const { id } = req.params;
-  const { imagen } = req.body;
+import { uploadImage } from "./controllers/restaurantesController.js";
+app.put("/restaurantes/:id/imagen", uploadImage);
 
-  if (!imagen) {
-    return res.status(400).json({ message: "No se ha enviado ninguna imagen" });
-  }
-
-  try {
-    const restauranteActualizado = await Restaurante.findByIdAndUpdate(
-      id,
-      { imagen },
-      { new: true }
-    );
-
-    if (!restauranteActualizado) {
-      return res.status(404).json({ message: "Restaurante no encontrado" });
-    }
-
-    res.status(200).json({
-      message: "Imagen actualizada correctamente",
-      restaurante: restauranteActualizado,
-    });
-  } catch (error) {
-    console.error("❌ Error al actualizar la imagen:", error);
-    res.status(500).json({ message: "Error al actualizar la imagen" });
-  }
-});
 // Ruta para guardar menú
 app.post("/menus", async (req, res) => {
   const { restauranteId, fecha, precio, primeros, segundos, incluye } = req.body;
