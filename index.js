@@ -105,6 +105,23 @@ app.get("/restaurantes", async (req, res) => {
     res.status(500).send("Error al obtener los restaurantes");
   }
 });
+
+// Obtener un restaurante por ID
+app.get("/restaurantes/:id", async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const restaurante = await Restaurante.findById(id);
+    if (!restaurante) {
+      return res.status(404).json({ message: "Restaurante no encontrado" });
+    }
+    res.json(restaurante);
+  } catch (error) {
+    console.error("❌ Error al obtener el restaurante:", error);
+    res.status(500).json({ message: "Error al obtener el restaurante" });
+  }
+});
+
 // 🖼 Ruta para actualizar la imagen de un restaurante
 app.put("/restaurantes/:id/imagen", async (req, res) => {
   const { id } = req.params;
