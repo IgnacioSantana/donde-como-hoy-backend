@@ -66,21 +66,23 @@ app.post("/restaurantes", async (req, res) => {
 // Login
 app.post("/restaurantes/login", async (req, res) => {
   const { email, password } = req.body;
+  console.log("📩 Intentando login con:", email);
   const emailNormalizado = email.toLowerCase();
 
   if (!email || !password) {
+    console.warn("⚠️ Faltan campos en el login");
     return res.status(400).json({ message: "Faltan el correo o la contraseña." });
   }
 
   try {
     const restaurante = await Restaurante.findOne({ email: emailNormalizado });
-
+    console.log("🔍 Restaurante encontrado:", restaurante);
     if (!restaurante) {
       return res.status(401).json({ message: "Correo no registrado." });
     }
 
     const passwordValida = await bcrypt.compare(password, restaurante.password);
-
+    console.log("🔑 Contraseña válida:", passwordValida);
     if (!passwordValida) {
       return res.status(401).json({ message: "Contraseña incorrecta." });
     }
